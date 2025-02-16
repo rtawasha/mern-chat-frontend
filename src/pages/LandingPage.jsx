@@ -107,7 +107,7 @@ export default function LandingPage() {
                   zIndex: -1,
                 }}
               >
-                Chatty
+                Chit-CHAT
               </Text>
               <br />
               <Text as="span" color="blue.400">
