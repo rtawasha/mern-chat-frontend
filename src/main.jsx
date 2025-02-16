@@ -9,5 +9,3 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 );
 
 
-// this file is the entry point to the App; equivalent to 'index.js' in Blog-Project-mvc
-// main.jsx 
