@@ -179,7 +179,7 @@ export default function LandingPage() {
                   {/* 1st item */}
                   <HStack>
                     <Icon as={FiUsers} />
-                    <Text fontWeight="bold">Team MasynTech</Text>
+                    <Text fontWeight="bold">Team Chit-CHAT</Text>
                   </HStack>
                   {/* 3 online */}
                   {/* 2nd item */}
