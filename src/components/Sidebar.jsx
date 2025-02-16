@@ -6,23 +6,21 @@ import { Link, useNavigate }         from "react-router-dom";
 import axios  from "axios";
 import apiURL from "../../utils";
 
-//! {setSelectedGroup} is set by clicking the group in sidebar
 const Sidebar = ( {setSelectedGroup} ) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [groups, setGroups] = useState([]);         //!stores all groups, info about each group: name, description, members as in Database
-  const [newGroupName, setNewGroupName] = useState("");  //! use Modal-related properties
+  const [groups, setGroups] = useState([]);         
+  const [newGroupName, setNewGroupName] = useState("");  
   const [newGroupDescription, setNewGroupDescription] = useState("");
-  const [userGroups, setUserGroups] = useState([]); //!stores an Array of group IDs of which a User is a member
+  const [userGroups, setUserGroups] = useState([]); 
   const [isAdmin, setIsAdmin] = useState(true);
   const toast = useToast();
   const navigate = useNavigate();
 
-  // run the 2 functions upon load 
   useEffect(() => {
     checkAdminStatus();
     fetchGroups();
-    console.log("updating userGroups -------------------------------------->", userGroups); //? chatGPT added - keeps logging(Inspect...)
-  }, []);  //? [userGroups] added chatGPT - runs on every re-render
+    console.log("updating userGroups -------------------------------------->", userGroups); 
+  }, []);  
 
   //Check if login user is an admin //! this should be placed BEFORE useEffect(), same goes for fetchGroups()
   const checkAdminStatus = () => {
@@ -31,22 +29,21 @@ const Sidebar = ( {setSelectedGroup} ) => {
     setIsAdmin(userInfo?.isAdmin || false);
   };
 
-  //GET all groups - any logged in user can do so!
+  //GET all groups 
   const fetchGroups = async () => {
     try {
       const userInfo = JSON.parse(localStorage.getItem("userInfo") || {});
       const token = userInfo.token;
-      const { data } = await axios.get(`http://localhost:3000/api/groups`, { headers: { Authorization: `Bearer ${token}` } });  //!as I did in Postman
-      // const { data } = await axios.get(`${apiURL}/api/groups`, { headers: { Authorization: `Bearer ${token}` }, }); //!as I did in Postman
+      const { data } = await axios.get(`http://localhost:3000/api/groups`, { headers: { Authorization: `Bearer ${token}` } });  
       
       setGroups(data);
       
       // Extract userGroupIds from updated data (userGroups: groups of which a User is a member)
       const userGroupIds = data?.filter((group) => {
         return group?.members?.some( (member) => member?._id === userInfo?._id );
-      }).map((group) => group?._id);   //! returns an Array of group IDs not of GroupObjects
+      }).map((group) => group?._id);  
 
-      setUserGroups([...userGroupIds]);  // Force state update - chatGPT
+      setUserGroups([...userGroupIds]);  
       //setUserGroups(userGroupIds);     //! replaced by the above line
 
     } catch (error) {
@@ -64,7 +61,6 @@ const Sidebar = ( {setSelectedGroup} ) => {
         'http://localhost:3000/api/groups', 
         { name: newGroupName, description: newGroupDescription, },
         { headers: { Authorization: `Bearer ${token}`,  }  }    
-        // `${apiURL}/api/groups`, ....
       );
       toast({
         title: "Group Created",
@@ -92,10 +88,10 @@ const Sidebar = ( {setSelectedGroup} ) => {
     try {
       const userInfo = JSON.parse(localStorage.getItem("userInfo") || {});
       const token = userInfo.token;
-      await axios.post(`http://localhost:3000/api/groups/${groupId}/join`, {}, {headers: { Authorization: `Bearer ${token}` }, })//!as in postman
+      await axios.post(`http://localhost:3000/api/groups/${groupId}/join`, {}, {headers: { Authorization: `Bearer ${token}` }, })
       // await axios.post(`${apiURL}/api/groups/${groupId}/join`, {}, {headers: { Authorization: `Bearer ${token}` }, })
       await fetchGroups();
-      setSelectedGroup(groups.find((g) => g?._id === groupId));   //! groups is a STATE
+      setSelectedGroup(groups.find((g) => g?._id === groupId));   
       toast({
         title: "Joined group successfully",
         status: "success",
@@ -115,10 +111,8 @@ const Sidebar = ( {setSelectedGroup} ) => {
   };
   
   //leave group
-  // const handleLeaveGroup = async (groupId = setSelectedGroup._id) => {        
-  // const groupId = setSelectedGroup?._id; 
   const handleLeaveGroup = async (groupId) => {      
-    console.log("\n\n\n Sidebar - groupId ------------------------------->", groupId); //! debugging
+    console.log("\n\n\n Sidebar - groupId ------------------------------->", groupId);     
     if (!groupId) {
       console.error("Error: groupId is undefined");
       return;
@@ -131,12 +125,12 @@ const Sidebar = ( {setSelectedGroup} ) => {
       const token = userInfo.token;
 
       await axios.post(`http://localhost:3000/api/groups/${groupId}/leave`, {}, {
-          headers: { Authorization: `Bearer ${token}` },          }); //!as I did in postman
+          headers: { Authorization: `Bearer ${token}` },          }); 
         
         await fetchGroups();
 
-        // Remove the groupId from userGroups MANUALLY before state updates - chatGPT
-        setUserGroups((prevUserGroups) => prevUserGroups.filter((id) => id !== groupId));  //! TRY commenting out this line
+        // Remove groupId MANUALLY 
+        setUserGroups((prevUserGroups) => prevUserGroups.filter((id) => id !== groupId));  
 
         setSelectedGroup(null);
 
@@ -164,7 +158,6 @@ const Sidebar = ( {setSelectedGroup} ) => {
     };
 
     // Sample groups data
-
     return (
     <Box
       h={{ base: "calc(100vh - 60px)", md: "100%" }}
