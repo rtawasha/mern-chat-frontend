@@ -12,7 +12,7 @@ const Login = () => {
   const toast = useToast();
   const navigate = useNavigate();
 
-  //! main logic for login
+  //! login logic
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -20,9 +20,7 @@ const Login = () => {
       const {data} = await axios.post(`http://localhost:3000/api/users/login`, { email, password, });
       console.log("Logging LocalStorage data.user below:\n\n");
       console.log("userInfo ==========================================> ", data.user, "\n\n");
-      //save User Object to localstorage after login (key: "userInfo", value: data.user)
       localStorage.setItem("userInfo", JSON.stringify(data.user)); 
-      // re-routes to http://localhost:5173/chat
       navigate("/chat");
 
     } catch (error) { 
