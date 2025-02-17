@@ -17,8 +17,10 @@ const Register = () => {
     e.preventDefault();
     setLoading(true);
     try{
-      const { data } = await axios.post(`http://localhost:3000/api/users/register`, {username, email, password});
-      // const { data } = await axios.post(`${apiURL}/api/users/register`, {username, email, password});
+      const { data } = await axios.post(
+        `${apiURL}/api/users/register`, 
+        {username, email, password}
+      );
       console.log("data ==========================================> ", data, "\n\n");
       navigate('/login');
 
