@@ -34,7 +34,10 @@ const Sidebar = ( {setSelectedGroup} ) => {
     try {
       const userInfo = JSON.parse(localStorage.getItem("userInfo") || {});
       const token = userInfo.token;
-      const { data } = await axios.get(`http://localhost:3000/api/groups`, { headers: { Authorization: `Bearer ${token}` } });  
+      const { data } = await axios.get(
+          `${apiURL}/api/groups`, 
+          { headers: { Authorization: `Bearer ${token}` } }
+      );  
       
       setGroups(data);
       
@@ -58,7 +61,7 @@ const Sidebar = ( {setSelectedGroup} ) => {
       const token = userInfo.token;
       //else: create group
       await axios.post(
-        'http://localhost:3000/api/groups', 
+        `${apiURL}/api/groups`,  
         { name: newGroupName, description: newGroupDescription, },
         { headers: { Authorization: `Bearer ${token}`,  }  }    
       );
@@ -88,8 +91,11 @@ const Sidebar = ( {setSelectedGroup} ) => {
     try {
       const userInfo = JSON.parse(localStorage.getItem("userInfo") || {});
       const token = userInfo.token;
-      await axios.post(`http://localhost:3000/api/groups/${groupId}/join`, {}, {headers: { Authorization: `Bearer ${token}` }, })
-      // await axios.post(`${apiURL}/api/groups/${groupId}/join`, {}, {headers: { Authorization: `Bearer ${token}` }, })
+      await axios.post(
+            `${apiURL}/api/groups/${groupId}/join`, 
+            {}, 
+          {headers: { Authorization: `Bearer ${token}` }, }
+      )
       await fetchGroups();
       setSelectedGroup(groups.find((g) => g?._id === groupId));   
       toast({
@@ -119,27 +125,29 @@ const Sidebar = ( {setSelectedGroup} ) => {
     }
 
     try {
-      // retrieve logged-in user info from localStorage
       const userInfo = JSON.parse(localStorage.getItem("userInfo") || {});
       console.log("userInfo in handleLeaveGroup ===========================================> ", userInfo);
       const token = userInfo.token;
 
-      await axios.post(`http://localhost:3000/api/groups/${groupId}/leave`, {}, {
-          headers: { Authorization: `Bearer ${token}` },          }); 
+      await axios.post(
+            `${apiURL}/api/groups/${groupId}/leave`,  
+            {},
+            {headers: { Authorization: `Bearer ${token}` } }
+      ); 
         
-        await fetchGroups();
+      await fetchGroups();
 
-        // Remove groupId MANUALLY 
-        setUserGroups((prevUserGroups) => prevUserGroups.filter((id) => id !== groupId));  
+      // Remove groupId MANUALLY 
+      setUserGroups((prevUserGroups) => prevUserGroups.filter((id) => id !== groupId));  
 
-        setSelectedGroup(null);
+      setSelectedGroup(null);
 
-        toast({
-          title: "Left group successfully",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
+      toast({
+        title: "Left group successfully",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
       } catch (error) {
         toast({
           title: "Error Leaving Group",
