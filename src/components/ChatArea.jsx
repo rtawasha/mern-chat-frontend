@@ -13,7 +13,7 @@ const ChatArea = ({ selectedGroup, socket, setSelectedGroup }) => {
   const [newMessage, setNewMessage] = useState("");
   const [connectedUsers, setConnectedUsers] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
-  const [typingUsers, setTypingUsers] = useState(new Set()); //! unique values: unique set of users who are typing: no dups
+  const [typingUsers, setTypingUsers] = useState(new Set()); 
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
   const toast = useToast();
@@ -28,8 +28,8 @@ const ChatArea = ({ selectedGroup, socket, setSelectedGroup }) => {
     const token = currentUser?.token; //! Extract authentication token
     try {
       const { data } = await axios.get(
-            `http://localhost:3000/api/messages/${selectedGroup?._id}`, 
-            {headers: { Authorization: `Bearer ${token}` }}            
+              `${apiURL}/api/messages/${selectedGroup?._id/group}`, 
+              {headers: { Authorization: `Bearer ${token}` }}            
       );
       setMessages(data);
     } catch (error) {
@@ -39,7 +39,6 @@ const ChatArea = ({ selectedGroup, socket, setSelectedGroup }) => {
 
   useEffect(() => {
     if (selectedGroup && socket) {
-      //fetchMessages by Group function defined below: line 84
       fetchMessages();
       socket.emit("join room", selectedGroup?._id);    
       socket.on("message received", (newMessage) => {  
@@ -106,7 +105,7 @@ const ChatArea = ({ selectedGroup, socket, setSelectedGroup }) => {
     }
     try {                                   
       const token = currentUser.token;
-      const { data } = await axios.post('http://localhost:3000/api/messages', 
+      const { data } = await axios.post(`${apiURL}/api/messages`,
         { content: newMessage, groupId: selectedGroup?._id, },
         { headers: { Authorization: `Bearer ${token}` },  }   
       );
