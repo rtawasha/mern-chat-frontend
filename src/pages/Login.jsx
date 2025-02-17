@@ -17,7 +17,10 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const {data} = await axios.post(`http://localhost:3000/api/users/login`, { email, password, });
+      const {data} = await axios.post(
+          `${apiURL}/api/users/login`, 
+          { email, password, }
+      );
       console.log("Logging LocalStorage data.user below:\n\n");
       console.log("userInfo ==========================================> ", data.user, "\n\n");
       localStorage.setItem("userInfo", JSON.stringify(data.user)); 
