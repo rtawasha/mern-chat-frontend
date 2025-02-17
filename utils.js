@@ -1,3 +1,5 @@
-const apiURL = "https://mern-chat-backend-0koj.onrender.com";
+const apiURL = "https://mern-chat-backend-1-ayvm.onrender.com";
 
 export default apiURL;
+
+
